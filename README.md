@@ -2,6 +2,8 @@
 
 [![dockeri.co](http://dockeri.co/image/hypriot/rpi-alpine-scratch)](https://registry.hub.docker.com/u/hypriot/rpi-alpine-scratch/)
 
+[![Build Status](http://armbuilder.hypriot.com/api/badge/github.com/hypriot/rpi-alpine-scratch/status.svg?branch=master)](http://armbuilder.hypriot.com/github.com/hypriot/rpi-alpine-scratch)
+
 Raspberry Pi compatible Docker Image with a minimal `linux` system.
 
 ## Details
