@@ -1,23 +1,30 @@
-image: registry.hypriot.com/armbuildchain/dockerindocker
-docker:
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-git:
-  path: github.com/hypriot/rpi-alpine-scratch
-script:
-  - echo "+++++ start docker daemon +++++"
-  - wrapdocker &
-  - sleep 5
-  - docker login --username=$$REGISTRY_USER --password=$$REGISTRY_PASSWORD --email=$$REGISTRY_USER_EMAIL $$REGISTRY_URL
-  - echo "+++++ build docker image +++++"
-  - make
-  - echo "+++++ stop docker daemon +++++"
-  - start-stop-daemon --stop --pidfile "/var/run/docker.pid"
-  - echo -e "#####################\n***** COMPLETED *****\n#####################"
+#debug: true
 
-notify:
-  slack:
-    webhook_url: $$SLACK_WEBHOOK_URL
-    on_started: false
-    on_success: true
-    on_failure: true
+build:
+  image: firecyberice/rpi-docker:1.10.0-dev
+  environment:
+    - DOCKER_HOST=tcp://localhost:2375
+  commands:
+    - apk update && apk add curl tar gzip
+    - export VERSION=$(cat VERSION)
+#    - curl --silent https://raw.githubusercontent.com/docker/docker/master/contrib/mkimage-alpine.sh > mkimage-alpine.sh
+    - chmod +x mkimage-alpine.sh
+    - ./mkimage-alpine.sh -s -r ${VERSION}
+    - ls -la
+
+compose:
+  docker:
+    privileged: true
+    image: firecyberice/rpi-docker:1.10.0-dev-dind
+
+publish:
+  docker:
+#    environment:
+#      - DOCKER_LAUNCH_DEBUG=true
+    username: $$DOCKER_USER
+    password: $$DOCKER_PASS
+    email: $$DOCKER_EMAIL
+    repo: hypriot/rpi-alpine-scratch
+    tag: 
+      - latest
+      - v3.2

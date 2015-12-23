@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e -x
 
 [ $(id -u) -eq 0 ] || {
   printf >&2 '%s requires root\n' "$0"
@@ -39,21 +38,20 @@ conf() {
 
 pack() {
   local id
-  id=$(tar --numeric-owner -C $ROOTFS -c . | docker import - $DOCKERTAG:$REL)
+  id=$(tar --numeric-owner -C $ROOTFS -c . | docker import - $TAG:$REL)
 
-  docker tag -f $id $DOCKERTAG
-  #alpine:latest
-  docker images
-  #docker run -i -t $DOCKERTAG:$REL printf $DOCKERTAG':%s with id=%s created!\n' $REL $id
+  docker tag $id $TAG:latest
+#  docker run -i -t $TAG printf 'alpine:%s with id=%s created!\n' $REL $id
 }
 
 save() {
   [ $SAVE -eq 1 ] || return
 
-  tar --numeric-owner -C $ROOTFS -c . | xz > rootfs.tar.xz
+#  tar --numeric-owner -C $ROOTFS -c . | xz > rootfs.tar.xz
+  tar --numeric-owner -C $ROOTFS -cf rootfs.tar .
+
 }
 
-:<<COM
 while getopts "hr:m:s" opt; do
   case $opt in
     r)
@@ -70,16 +68,28 @@ while getopts "hr:m:s" opt; do
       ;;
   esac
 done
-COM
 
-DOCKERTAG=${IMAGENAME:-alpine}
-#REL=${REL:-edge}
-REL=${REL:-v3.2}
+REL=${REL:-edge}
 MIRROR=${MIRROR:-http://nl.alpinelinux.org/alpine}
 SAVE=${SAVE:-0}
 REPO=$MIRROR/$REL/main
 ARCH=armhf
 #ARCH=$(uname -m)
+TAG=firecyberice/armhf-alpine
 
-tmp && getapk && mkbase && conf && pack
-# && save
+echo -e "prepare\n\n"
+tmp && getapk
+
+echo -e "makebase\n\n"
+mkbase
+
+
+echo -e "config\n\n"
+echo -e "$REPO\n" > $ROOTFS/etc/apk/repositories
+#conf
+
+echo -e "pack\n\n"
+pack
+
+echo -e "save\n\n"
+save
