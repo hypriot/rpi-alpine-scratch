@@ -1,4 +1,4 @@
-# rpi-alpine-scratch [![Build Status](http://armbuilder2.hypriot.com/api/badge/github.com/hypriot/rpi-alpine-scratch/status.svg?branch=master)](http://armbuilder.hypriot.com/github.com/hypriot/rpi-alpine-scratch)
+# rpi-alpine-scratch [![Build Status](https://armbuilder.hypriot.com/api/badges/hypriot/rpi-alpine-scratch/status.svg)](https://armbuilder.hypriot.com/hypriot/rpi-alpine-scratch)
 
 Raspberry Pi compatible Docker Image with a minimal `linux` system.
 
