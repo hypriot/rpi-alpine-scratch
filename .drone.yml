@@ -1,12 +1,14 @@
 #debug: true
 
 build:
+  when:
+    event: tag
   image: firecyberice/rpi-docker:1.10.0-dev
   environment:
     - DOCKER_HOST=tcp://localhost:2375
   commands:
     - apk update && apk add curl tar gzip
-    - export VERSION=$(cat VERSION)
+    - export VERSION=$$TAG
 #    - curl --silent https://raw.githubusercontent.com/docker/docker/master/contrib/mkimage-alpine.sh > mkimage-alpine.sh
     - chmod +x mkimage-alpine.sh
     - ./mkimage-alpine.sh -s -r ${VERSION}
@@ -25,6 +27,8 @@ publish:
     password: $$DOCKER_PASS
     email: $$DOCKER_EMAIL
     repo: hypriot/rpi-alpine-scratch
-    tag: 
-      - latest
-      - v3.2
+    tag:
+#      - latest
+      - $$TAG
+    when:
+      event: tag
