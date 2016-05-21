@@ -32,19 +32,12 @@ docker build -t alpine-mini .
 
 ## How to create this image
 
-Run all the commands from within the project root directory.
+1. Configure drone
 
-### Build the Docker Image
+2. Create and push a tag
 ```bash
-make create
-```
-
-#### Push the Docker Image to the Docker Hub
-* First use a `docker login` with username, password and email address
-* Second push the Docker Image to the official Docker Hub
-
-```bash
-make push
+git tag v3.3
+git push origin v3.3
 ```
 
 ## License
