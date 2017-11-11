@@ -85,7 +85,7 @@ mkbase
 
 
 echo -e "config\n\n"
-echo -e "$REPO\n" > $ROOTFS/etc/apk/repositories
+echo "$REPO" > $ROOTFS/etc/apk/repositories
 #conf
 
 echo -e "pack\n\n"
